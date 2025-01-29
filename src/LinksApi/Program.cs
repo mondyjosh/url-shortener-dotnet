@@ -16,8 +16,8 @@ builder.Services.AddSwaggerGen(options =>
         new OpenApiInfo
         {
             Version = "v1",
-            Title = "URL Shortening API",
-            Description = "Web API for managing shortened links.",
+            Title = "Links API",
+            Description = "Web API for managing links.",
         }
     );
 
