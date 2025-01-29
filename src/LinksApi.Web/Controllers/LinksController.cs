@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 
-namespace UrlShortenerApi.Controllers;
+namespace LinksApi.Web.Controllers;
 
 /// <summary>
 /// Endpoints related to link management.

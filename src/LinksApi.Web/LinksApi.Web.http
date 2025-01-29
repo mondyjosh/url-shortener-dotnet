@@ -1,0 +1,6 @@
+@LinksApiWeb_HostAddress = http://localhost:5286
+
+GET {{LinksApiWeb_HostAddress}}/links/
+Accept: application/json
+
+###
