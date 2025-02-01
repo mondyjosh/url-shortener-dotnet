@@ -1,10 +1,17 @@
 using System.Reflection;
+
 using Microsoft.OpenApi.Models;
+
+using LinksApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
 builder.Services.AddControllers();
+builder.Services.SetupLinksApiServices();
+
+// Lowercase routes, please
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 // Add Swagger Generator
 builder.Services.AddEndpointsApiExplorer();

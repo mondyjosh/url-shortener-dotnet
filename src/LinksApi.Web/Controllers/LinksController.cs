@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Net.Mime;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace LinksApi.Web.Controllers;
@@ -9,20 +10,12 @@ namespace LinksApi.Web.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
-public class LinksController : ControllerBase
+public class LinksController(ILinksService linksService) : ControllerBase
 {
-    /// <summary>
-    /// Initializes a new instances of the <see cref="LinksController"/> class.
-    /// </summary>
-    public LinksController(ILogger<LinksController> logger)
-    {
-        _logger = logger;
-    }
-
     /// <summary>
     /// Creates a short link.
     /// </summary>
-    /// <param name="link">The original link to shorten.</param>
+    /// <param name="link">The URL to shorten.</param>
     /// <returns>A shortened link representing the original long URL.</returns>
     /// <response code="200">Returns a shortened link representing the original URL.</response>
     /// <response code="400">If the link is null or not a valid URL.</response>
@@ -30,18 +23,19 @@ public class LinksController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [Produces(MediaTypeNames.Application.Json)]
-    public string GetShortLink([Required] string link)
+    public async Task<IActionResult> ShortenLinkAsync([Required][FromBody] string link)
     {
-        // TODO: Service to shorten link
-        return $"TODO: Shorten {link}";
+        var response = await _linksService.ShortenLinkAsync(link);
+
+        return Ok(response);
     }
 
     /// <summary>
     /// Retrieve original URL from short link.
     /// </summary>
-    /// <param name="shortLink">The shortened link.</param>
-    /// <returns>The original long URL.</returns>
-    /// <response code="200">Returns the original long URL.</response>
+    /// <param name="shortLink">The shortened link that represents a URL.</param>
+    /// <returns>The original URL.</returns>
+    /// <response code="200">Returns the original URL.</response>
     /// <response code="400">If the short link is null or not a valid URL.</response>
     /// <response code="404">If the short link is not found.</response>
     [HttpGet]
@@ -49,11 +43,13 @@ public class LinksController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Produces(MediaTypeNames.Application.Json)]
-    public string GetOriginalLink([Required] string shortLink)
+    public async Task<IActionResult> RetrieveLinkAsync([Required] string shortLink)
     {
         // TODO: Service to get original link from shortLink
-        return $"TODO: Get original link for {shortLink}";
+        var response = await _linksService.RetrieveLinkAsync(shortLink);
+
+        return Ok(response);
     }
 
-    private readonly ILogger<LinksController> _logger;
+    private readonly ILinksService _linksService = linksService;
 }
