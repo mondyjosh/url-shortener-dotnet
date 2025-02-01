@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LinksApi\LinksApi.csproj" />
+    <ProjectReference Include="../LinksApi/LinksApi.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

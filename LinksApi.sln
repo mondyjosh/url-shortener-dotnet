@@ -3,9 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinksApi", "LinksApi\LinksApi.csproj", "{2E6649AC-E4BE-4696-ABC8-1482C1FBC2CC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinksApi", "src\LinksApi\LinksApi.csproj", "{2E6649AC-E4BE-4696-ABC8-1482C1FBC2CC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinksApi.Web", "LinksApi.Web\LinksApi.Web.csproj", "{0BA38E6D-D4BC-43B7-982F-446717174C26}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinksApi.Web", "src\LinksApi.Web\LinksApi.Web.csproj", "{0BA38E6D-D4BC-43B7-982F-446717174C26}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{F5E90D1C-2889-410B-82AA-3CD0BD3F6976}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinksApi.Tests", "test\LinksApi\LinksApi.Tests.csproj", "{F23E230A-D3D1-49EF-B2AD-37E9EE473F40}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,5 +28,12 @@ Global
 		{0BA38E6D-D4BC-43B7-982F-446717174C26}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0BA38E6D-D4BC-43B7-982F-446717174C26}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0BA38E6D-D4BC-43B7-982F-446717174C26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F23E230A-D3D1-49EF-B2AD-37E9EE473F40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F23E230A-D3D1-49EF-B2AD-37E9EE473F40}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F23E230A-D3D1-49EF-B2AD-37E9EE473F40}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F23E230A-D3D1-49EF-B2AD-37E9EE473F40}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F23E230A-D3D1-49EF-B2AD-37E9EE473F40} = {F5E90D1C-2889-410B-82AA-3CD0BD3F6976}
 	EndGlobalSection
 EndGlobal
