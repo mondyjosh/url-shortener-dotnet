@@ -25,8 +25,7 @@ public class LinksController(ILinksService linksService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [Produces(MediaTypeNames.Application.Json)]
-    // public async Task<IActionResult> ShortenLinkAsync([Required][FromBody] string link)
-    public async Task<IActionResult> ShortenLinkAsync([Required][FromBody] ShortenLinkRequest request)
+    public async Task<IActionResult> ShortenLinkAsync([Required] ShortLinkRequest request)
     {
         var response = await _linksService.ShortenLinkAsync(request);
 
@@ -36,19 +35,24 @@ public class LinksController(ILinksService linksService) : ControllerBase
     /// <summary>
     /// Retrieve an original URL from short link.
     /// </summary>
-    /// <param name="request">The <see cref="RetrieveLinkRequest"/> used to retrieve the original URL.</param>
-    /// <returns>The original URL.</returns>
+    /// <param name="shortLink">The shortLink used to retrieve the original URL.</param>
+    /// <returns>The original long URL.</returns>
     /// <response code="200">Returns the original URL.</response>
     /// <response code="400">If the short link is null or not a valid URL.</response>
     /// <response code="404">If the short link is not found.</response>
-    [HttpGet]
+    [HttpGet("{**shortLink}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Produces(MediaTypeNames.Application.Json)]
-    public async Task<IActionResult> RetrieveLinkAsync([Required] RetrieveLinkRequest request)
-    {        
-        var response = await _linksService.RetrieveLinkAsync(request);
+    public async Task<IActionResult> RetrieveUrlAsync([Required] string shortLink)
+    {
+        // If Url decoding is frequently required across future endpoints,
+        // consider using a ModelBinder
+        shortLink = Uri.UnescapeDataString(shortLink);
+
+        var request = new RetrieveUrlRequest { ShortLink = shortLink };
+        var response = await _linksService.RetrieveUrlAsync(request);
 
         return Ok(response);
     }

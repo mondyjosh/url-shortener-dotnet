@@ -1,6 +1,11 @@
-// namespace LinksApi.Data;
+using LinksApi.Data.Models;
 
-// public class ILinksRepository
-// {
+namespace LinksApi.Data;
 
-// }
+// TODO: Document
+interface ILinksRepository
+{
+    public Task<Link> GetLinkFromLongUrlAsync(string longUrl);
+    public Task<Link> GetLinkFromShortLinkAsync(string longUrl);
+    public Task<Link> CreateShortLinkAsync(string longUrl);
+}

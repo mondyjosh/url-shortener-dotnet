@@ -1,8 +1,9 @@
 using System.Text.Json.Serialization;
 
-namespace LinksApi.Requests;
+namespace LinksApi.Responses;
 
-public class ShortenLinkRequest
+// TODO: Document
+public class RetrieveUrlResponse
 {
     [JsonPropertyName("long_url")]
     public required string LongUrl { get; set; }

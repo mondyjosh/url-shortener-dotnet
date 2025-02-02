@@ -1,40 +1,24 @@
-// using Npgsql;
-// using Dapper;
+using Npgsql;
+using Dapper;
+using LinksApi.Data.Models;
 
-// namespace LinksApi.Data;
+namespace LinksApi.Data;
 
-// public class LinksRepository : ILinksRepository
-// {
-//     public LinksRepository(string connectionString)
-//     {
-//         connection = new NpgsqlConnection(connectionString);
-//         connection.Open();
-//     }
+public class LinksRepository : ILinksRepository
+{
+    Task<Link> ILinksRepository.CreateShortLinkAsync(string longUrl)
+    {
+        throw new NotImplementedException();
+    }
 
-//     public async Task AddShortLink(string shortLink)
-//     {
-//         string commandText = $"INSERT INTO 
-//          (id, Name, MinPlayers, MaxPlayers, AverageDuration) VALUES (@id, @name, @minPl, @maxPl, @avgDur)";
+    Task<Link> ILinksRepository.GetLinkFromLongUrlAsync(string longUrl)
+    {
+        // SELECT id, short_link, long_url, created_at, updated_at	FROM links;
+        throw new NotImplementedException();
+    }
 
-//         await using var cmd = new NpgsqlCommand(commandText, connection);
-
-//         cmd.Parameters.AddWithValue("id", game.Id);
-//         cmd.Parameters.AddWithValue("name", game.Name);
-//         cmd.Parameters.AddWithValue("minPl", game.MinPlayers);
-//         cmd.Parameters.AddWithValue("maxPl", game.MaxPlayers);
-//         cmd.Parameters.AddWithValue("avgDur", game.AverageDuration);
-
-//         await cmd.ExecuteNonQueryAsync();
-//     }
-
-//     public async GetLinkAsync()
-//     {
-//         connection.Query<Dog>("select Age = @Age, Id = @Id", new { Age = (int?)null, Id = guid });
-//     }
-
-//     private NpgsqlConnection connection;
-
-
-
-// }
-
+    Task<Link> ILinksRepository.GetLinkFromShortLinkAsync(string longUrl)
+    {
+        throw new NotImplementedException();
+    }
+}

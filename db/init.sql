@@ -2,15 +2,15 @@ CREATE TABLE IF NOT EXISTS
   links (
     id serial PRIMARY KEY,
     short_link text NOT NULL,
-    original_link text NOT NULL,
+    long_url text NOT NULL,
     created_at timestamptz NOT NULL DEFAULT NOW(),
     updated_at timestamptz NOT NULL DEFAULT NOW()
   );
 
 INSERT INTO
-  links (short_link, original_link)
+  links (short_link, long_url)
 VALUES
-  -- Will get the proper shortlinks later
+  -- Will get the proper shortlinks later after I've got the transformation figured out.
   (
     'https://go.to/abc123',
     'https://example.com/original-url'

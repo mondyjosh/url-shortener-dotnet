@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
 builder.Services.AddControllers();
+
 builder.Services.SetupLinksApiServices();
 
 // Lowercase routes, please
@@ -18,7 +19,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc(
-        "v1",
+        "v1", 
         new OpenApiInfo
         {
             Version = "v1",
