@@ -3,6 +3,8 @@ using System.Net.Mime;
 
 using Microsoft.AspNetCore.Mvc;
 
+using LinksApi.Requests;
+
 namespace LinksApi.Web.Controllers;
 
 /// <summary>
@@ -15,7 +17,7 @@ public class LinksController(ILinksService linksService) : ControllerBase
     /// <summary>
     /// Creates a short link.
     /// </summary>
-    /// <param name="link">The URL to shorten.</param>
+    /// <param name="request">The long URL to shorten.</param>
     /// <returns>A shortened link representing the original long URL.</returns>
     /// <response code="200">Returns a shortened link representing the original URL.</response>
     /// <response code="400">If the link is null or not a valid URL.</response>
@@ -23,17 +25,18 @@ public class LinksController(ILinksService linksService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [Produces(MediaTypeNames.Application.Json)]
-    public async Task<IActionResult> ShortenLinkAsync([Required][FromBody] string link)
+    // public async Task<IActionResult> ShortenLinkAsync([Required][FromBody] string link)
+    public async Task<IActionResult> ShortenLinkAsync([Required][FromBody] ShortenLinkRequest request)
     {
-        var response = await _linksService.ShortenLinkAsync(link);
+        var response = await _linksService.ShortenLinkAsync(request);
 
         return Ok(response);
     }
 
     /// <summary>
-    /// Retrieve original URL from short link.
+    /// Retrieve an original URL from short link.
     /// </summary>
-    /// <param name="shortLink">The shortened link that represents a URL.</param>
+    /// <param name="request">The <see cref="RetrieveLinkRequest"/> used to retrieve the original URL.</param>
     /// <returns>The original URL.</returns>
     /// <response code="200">Returns the original URL.</response>
     /// <response code="400">If the short link is null or not a valid URL.</response>
@@ -43,10 +46,9 @@ public class LinksController(ILinksService linksService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Produces(MediaTypeNames.Application.Json)]
-    public async Task<IActionResult> RetrieveLinkAsync([Required] string shortLink)
-    {
-        // TODO: Service to get original link from shortLink
-        var response = await _linksService.RetrieveLinkAsync(shortLink);
+    public async Task<IActionResult> RetrieveLinkAsync([Required] RetrieveLinkRequest request)
+    {        
+        var response = await _linksService.RetrieveLinkAsync(request);
 
         return Ok(response);
     }
