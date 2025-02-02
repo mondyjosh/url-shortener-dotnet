@@ -35,11 +35,12 @@ builder.Services.AddSwaggerGen(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+
+// Normally, we'd only want to show SwaggerUI when app.Environment.IsDevelopment(),
+// but this is a handy way to demo!
+app.UseSwagger();
+app.UseSwaggerUI();
+app.MapGet("/", () => Results.Redirect("/swagger")).ExcludeFromDescription();
 
 app.UseHttpsRedirection();
 
