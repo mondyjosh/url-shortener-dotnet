@@ -4,6 +4,7 @@ using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 
 using LinksApi.Requests;
+using LinksApi.Exceptions;
 
 namespace LinksApi.Web.Controllers;
 
@@ -17,7 +18,7 @@ public class LinksController(ILinksService linksService) : ControllerBase
     /// <summary>
     /// Creates a short link.
     /// </summary>
-    /// <param name="request">The long URL to shorten.</param>
+    /// <param name="request">The <see cref="ShortLinkRequest"/> that supplies the long URL to shorten.</param>
     /// <returns>A shortened link representing the original long URL.</returns>
     /// <response code="200">Returns a shortened link representing the original URL.</response>
     /// <response code="400">If the link is null or not a valid URL.</response>
@@ -27,15 +28,25 @@ public class LinksController(ILinksService linksService) : ControllerBase
     [Produces(MediaTypeNames.Application.Json)]
     public async Task<IActionResult> ShortenLinkAsync([Required] ShortLinkRequest request)
     {
-        var response = await _linksService.ShortenLinkAsync(request);
 
-        return Ok(response);
+        // TODO: Return exceptions as problem details in a more centralized location
+        //       Don't want to use try/catch around everything because that sucks.
+        try
+        {
+            var response = await _linksService.ShortenLinkAsync(request);
+
+            return Ok(response);
+        }
+        catch (UriFormatException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     /// <summary>
     /// Retrieve an original URL from short link.
-    /// </summary>
-    /// <param name="shortLink">The shortLink used to retrieve the original URL.</param>
+    /// </summary>    
+    /// /// <param name="request">The <see cref="RetrieveUrlRequest"/> that supplies the shortLink used to retrieve the original URL.</param>
     /// <returns>The original long URL.</returns>
     /// <response code="200">Returns the original URL.</response>
     /// <response code="400">If the short link is null or not a valid URL.</response>
@@ -45,16 +56,26 @@ public class LinksController(ILinksService linksService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Produces(MediaTypeNames.Application.Json)]
-    public async Task<IActionResult> RetrieveUrlAsync([Required] string shortLink)
+    public async Task<IActionResult> RetrieveUrlAsync([Required][FromRoute] RetrieveUrlRequest request)
     {
-        // If Url decoding is frequently required across future endpoints,
-        // consider using a ModelBinder
-        shortLink = Uri.UnescapeDataString(shortLink);
 
-        var request = new RetrieveUrlRequest { ShortLink = shortLink };
-        var response = await _linksService.RetrieveUrlAsync(request);
+        // TODO: Return exceptions as problem details in a more centralized location
+        //       Don't want to use try/catch around everything because that sucks.
+        try
+        {
+            // var request = new RetrieveUrlRequest(request);
+            var response = await _linksService.RetrieveUrlAsync(request);
 
-        return Ok(response);
+            return Ok(response);
+        }
+        catch (ShortLinkNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (UriFormatException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     private readonly ILinksService _linksService = linksService;
