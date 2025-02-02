@@ -9,7 +9,7 @@ COPY . /source
 WORKDIR /source/src/LinksApi.Web
 
 # Target architecture is passed in by the builder.
-# Placing it here allows previous teps to be cached across architectures.
+# Placing it here allows previous steps to be cached across architectures.
 ARG TARGETARCH
 
 # Build the application.
