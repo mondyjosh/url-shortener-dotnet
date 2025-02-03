@@ -7,13 +7,15 @@ namespace LinksApi.Requests;
 // TODO: Document
 public class ShortLinkRequest
 {
+    public ShortLinkRequest() { }
+
     [SetsRequiredMembers]
     public ShortLinkRequest(string longUrl)
     {
         LongUrl = longUrl;
         Validate();
     }
-    
+
     [Required]
     [JsonPropertyName("long_url")]
     [Url(ErrorMessage = "long_url is not a valid URI format.")]

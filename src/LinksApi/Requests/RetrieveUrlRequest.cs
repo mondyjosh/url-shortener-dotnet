@@ -7,6 +7,8 @@ namespace LinksApi.Requests;
 // TODO: Document
 public class RetrieveUrlRequest : IValidatableObject
 {
+    public RetrieveUrlRequest() { }
+    
     [SetsRequiredMembers]
     public RetrieveUrlRequest(string shortLink)
     {
