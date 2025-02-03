@@ -5,6 +5,9 @@ namespace LinksApi.Responses;
 // TODO: Document
 public class ShortLinkResponse
 {
-    [JsonPropertyName("short_url")]
+    [JsonPropertyName("short_link")]
     public required string ShortLink { get; set; }
+
+    [JsonPropertyName("long_url")]
+    public required string LongUrl { get; set; }
 }
