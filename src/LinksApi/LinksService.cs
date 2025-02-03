@@ -3,7 +3,6 @@ using LinksApi.Data.Models;
 using LinksApi.Exceptions;
 using LinksApi.Requests;
 using LinksApi.Responses;
-using Npgsql.Replication;
 
 namespace LinksApi;
 
@@ -11,12 +10,14 @@ class LinksService(ILinksRepository linksRepository) : ILinksService
 {
     public async Task<ShortLinkResponse> ShortenLinkAsync(ShortLinkRequest request)
     {
+        // check if the link already exists
         var record = await _linksRepository.GetLinkFromLongUrlAsync(request.LongUrl);
         // TODO_CRITERIA: one which shortens the URL into a brief alphanumeric string.
 
         if (record is null)
         {
-            var shortLink = EncodeLongUrl(request.LongUrl);
+            var shortLink = GenerateShortLink(request.LongUrl);
+            record = new Link { LongUrl = request.LongUrl, ShortLink = shortLink };
             record = await _linksRepository.CreateShortLinkAsync(shortLink);
         }
 
@@ -30,29 +31,26 @@ class LinksService(ILinksRepository linksRepository) : ILinksService
 
         // // TODO_CRITERIA: If no such URL exists, it should return an error.
 
-        // if (record is null)
-        // {
-        //     throw new ShortLinkNotFoundException("");
-        // }
-
-        // ----------------------------------------------------
-        // TODO: Validate if request.ShortLink is a URL
-
         var record = await _linksRepository.GetLinkFromShortLinkAsync(request.ShortLink)
             ?? throw new ShortLinkNotFoundException(string.Format("shortLink not found: {0}", request.ShortLink));
 
         return MapRetrieveUrlResponse(record);
     }
 
-    private static string EncodeLongUrl(string longUrl)
+    private static string GenerateShortLink(string longUrl)
     {
-        // Right now it's just a substring, but we'll get something more clever in a bit.
-        // I'd really prefer the solution to be static
-        return $"go.to/{longUrl[..6]}";
+        var encoded = Base62Encoder.EncodeAsBase62String(longUrl);
+
+        // Trim encoded to desired length and assemble full shortlink.
+        return $"{HttpScheme}://{Domain}/{encoded[..ShortUrlLength]}";
     }
 
     private static ShortLinkResponse MapShortLinkResponse(Link record) => new() { ShortLink = record.ShortLink };
     private static RetrieveUrlResponse MapRetrieveUrlResponse(Link record) => new() { LongUrl = record.LongUrl };
 
     private readonly ILinksRepository _linksRepository = linksRepository;
+
+    private const string HttpScheme = "https"; // TODO: Move to config
+    private const string Domain = "short.link"; // TODO: Move to config
+    private const int ShortUrlLength = 7; // TODO: Move to config
 }
