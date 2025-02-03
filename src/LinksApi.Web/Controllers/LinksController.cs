@@ -44,7 +44,7 @@ public class LinksController(ILinksService linksService) : ControllerBase
 
     /// <summary>
     /// Retrieve an original URL from short link.
-    /// </summary>    
+    /// </summary>
     /// <param name="request">The <see cref="RetrieveUrlRequest"/> that supplies the shortLink used to retrieve the original URL.</param>
     /// <returns>The original long URL.</returns>
     /// <response code="200">Returns the original URL.</response>
