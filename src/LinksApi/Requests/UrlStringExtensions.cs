@@ -1,3 +1,5 @@
+namespace LinksApi.Requests;
+
 static class UrlStringExtensions
 {
     public static bool IsValidUrl(this string input) =>
