@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Dapper;
 
 using LinksApi.Data;
+using Microsoft.Extensions.Configuration;
 
 namespace LinksApi;
 
@@ -14,6 +15,11 @@ public static class ServiceCollectionExtensions
 
         return services
             .AddScoped<ILinksRepository, LinksRepository>()
-            .AddScoped<ILinksService>(serviceProvider => new LinksService(serviceProvider.GetRequiredService<ILinksRepository>()));
+            .AddScoped<ILinksService>(serviceProvider =>
+                new LinksService(
+                    serviceProvider.GetRequiredService<IConfiguration>(),
+                    serviceProvider.GetRequiredService<ILinksRepository>()
+                )
+            );
     }
 }
