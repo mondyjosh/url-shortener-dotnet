@@ -3,8 +3,8 @@ using System.Net.Mime;
 
 using Microsoft.AspNetCore.Mvc;
 
-using LinksApi.Requests;
 using LinksApi.Exceptions;
+using LinksApi.Requests;
 
 namespace LinksApi.Web.Controllers;
 

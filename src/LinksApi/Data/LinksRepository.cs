@@ -1,9 +1,10 @@
-using Npgsql;
-using Dapper;
-using LinksApi.Data.Models;
-using System.Data;
 using Microsoft.Extensions.Configuration;
-using System.Reflection;
+
+using Dapper;
+
+using LinksApi.Data.Models;
+
+using Npgsql;
 
 namespace LinksApi.Data;
 
@@ -70,6 +71,5 @@ class LinksRepository(IConfiguration config) : ILinksRepository
         return await connection.QuerySingleOrDefaultAsync<Link>(sql, new { shortLink });
     }
 
-    private readonly string _connectionString = config.GetConnectionString("DefaultConnection") ?? throw new ArgumentNullException("Missing ConnectionStrings:DefaultConnection");
-    // private const string temp_cxnstring = "Server=localhost;Port=5432;Database=postgres;User Id=postgres;Password=postgres;";
+    private readonly string _connectionString = config.GetConnectionString("DefaultConnection") ?? throw new ArgumentNullException("Missing ConnectionStrings:DefaultConnection");    
 }

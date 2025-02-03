@@ -1,9 +1,9 @@
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using Dapper;
 
 using LinksApi.Data;
-using Microsoft.Extensions.Configuration;
 
 namespace LinksApi;
 
