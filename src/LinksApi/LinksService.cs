@@ -17,8 +17,7 @@ class LinksService(ILinksRepository linksRepository) : ILinksService
         if (record is null)
         {
             var shortLink = GenerateShortLink(request.LongUrl);
-            record = new Link { LongUrl = request.LongUrl, ShortLink = shortLink };
-            record = await _linksRepository.CreateShortLinkAsync(shortLink);
+            record = await _linksRepository.CreateShortLinkAsync(shortLink, request.LongUrl);
         }
 
         return MapShortLinkResponse(record);

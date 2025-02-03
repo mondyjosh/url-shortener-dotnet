@@ -6,6 +6,6 @@ namespace LinksApi.Data;
 interface ILinksRepository
 {
     public Task<Link?> GetLinkFromLongUrlAsync(string longUrl);
-    public Task<Link?> GetLinkFromShortLinkAsync(string longUrl);
-    public Task<Link> CreateShortLinkAsync(string longUrl);
+    public Task<Link?> GetLinkFromShortLinkAsync(string shortLink);
+    public Task<Link> CreateShortLinkAsync(string shortLink, string longUrl);
 }

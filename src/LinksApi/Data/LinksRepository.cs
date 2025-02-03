@@ -11,54 +11,73 @@ class LinksRepository : ILinksRepository
     {
         // TODO: DI config
         // _db = new NpgsqlConnection(config.GetConnectionString("Employeedb"));
-        _db = new NpgsqlConnection(temp_cxnstring);
+        // _db = new NpgsqlConnection(temp_cxnstring);
+
+        _connectionString = temp_cxnstring;
     }
 
     /*async*/
-    Task<Link> ILinksRepository.CreateShortLinkAsync(string longUrl)
+    async Task<Link> ILinksRepository.CreateShortLinkAsync(string shortLink, string longUrl)
     {
-        // build the Link model, Insert and return int?
-        throw new NotImplementedException();
+        using var connection = new NpgsqlConnection(_connectionString);
 
-        /*
-    await using SqlConnection cn = new(ConnectionString());
-    await using SqlCommand cmd = new()
-    {
-        Connection = cn,
-        CommandText = SqlStatements.InsertPeople
-    };
+        var sql = @"
+            INSERT INTO
+                links (short_link, long_url)
+            VALUES
+                (@ShortLink, @LongUrl)
+            RETURNING
+                id
+        ";
 
-    cmd.Parameters.Add("@Id", SqlDbType.Int).Value = person.Id;
-    cmd.Parameters.Add("@FirstName", SqlDbType.NVarChar).Value = person.FirstName;
-    cmd.Parameters.Add("@LastName", SqlDbType.NVarChar).Value = person.LastName;
-    cmd.Parameters.Add("@BirthDate", SqlDbType.Date).Value = person.BirthDate;
+        var link = new Link { ShortLink = shortLink, LongUrl = longUrl };
+        var linkId = await connection.ExecuteAsync(sql, link);
 
-    await cn.OpenAsync();
+        link.Id = linkId;
 
-    person.Id = Convert.ToInt32(await cmd.ExecuteScalarAsync());
-
-
-        */
+        return link;
     }
-    
+
     async Task<Link?> ILinksRepository.GetLinkFromLongUrlAsync(string longUrl)
     {
-        using var cxn = new NpgsqlConnection(temp_cxnstring);
+        using var connection = new NpgsqlConnection(_connectionString);
 
-        var query = "SELECT id, short_link, long_url, created_at, updated_at FROM links WHERE long_url =@longUrl ";
+        var sql = @"
+            SELECT
+                id,
+                short_link,
+                long_url,
+                created_at,
+                updated_at
+            FROM
+                links
+            WHERE 
+                long_url = @longUrl
+        ";
 
-        return await _db.QuerySingleOrDefaultAsync<Link>(query, new { longUrl });
+        return await connection.QuerySingleOrDefaultAsync<Link>(sql, new { longUrl });
     }
 
     async Task<Link?> ILinksRepository.GetLinkFromShortLinkAsync(string shortLink)
     {
-        using var cxn = new NpgsqlConnection(temp_cxnstring);
+        using var connection = new NpgsqlConnection(_connectionString);
 
-        var query = "SELECT id, short_link, long_url, created_at, updated_at FROM links WHERE short_link =@shortLink ";
+        var sql = @"
+            SELECT
+                id,
+                short_link,
+                long_url,
+                created_at,
+                updated_at
+            FROM
+                links
+            WHERE 
+                short_link = @shortLink
+        ";
 
-        return await _db.QuerySingleOrDefaultAsync<Link>(query, new { shortLink });
+        return await connection.QuerySingleOrDefaultAsync<Link>(sql, new { shortLink });
     }
 
-    private readonly IDbConnection _db;
+    private readonly string _connectionString;
     private const string temp_cxnstring = "Server=localhost;Port=5432;Database=postgres;User Id=postgres;Password=postgres;";
 }
