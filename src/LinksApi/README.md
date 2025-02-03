@@ -1,3 +1,3 @@
 # LinksApi
 
-TODO: Description
+API library for managing for shortened URLs.

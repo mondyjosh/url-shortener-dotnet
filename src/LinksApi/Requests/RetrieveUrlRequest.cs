@@ -4,11 +4,13 @@ using System.Text.Json.Serialization;
 
 namespace LinksApi.Requests;
 
-// TODO: Document
+/// <summary>
+/// Request to retrieve a long URL.
+/// </summary>
 public class RetrieveUrlRequest : IValidatableObject
 {
     public RetrieveUrlRequest() { }
-    
+
     [SetsRequiredMembers]
     public RetrieveUrlRequest(string shortLink)
     {
@@ -16,6 +18,9 @@ public class RetrieveUrlRequest : IValidatableObject
         Validate();
     }
 
+    /// <summary>
+    /// The short link used to search for an existing long URL.
+    /// </summary>
     [Required]
     [JsonPropertyName("short_link")]
     [Url(ErrorMessage = "short_link is not a valid URI format.")]

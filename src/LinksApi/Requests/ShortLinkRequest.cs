@@ -4,7 +4,9 @@ using System.Text.Json.Serialization;
 
 namespace LinksApi.Requests;
 
-// TODO: Document
+/// <summary>
+/// Request to shorten a long URL.
+/// </summary>
 public class ShortLinkRequest
 {
     public ShortLinkRequest() { }
@@ -16,6 +18,9 @@ public class ShortLinkRequest
         Validate();
     }
 
+    /// <summary>
+    /// The long URL used to create a short link.
+    /// </summary>
     [Required]
     [JsonPropertyName("long_url")]
     [Url(ErrorMessage = "long_url is not a valid URI format.")]

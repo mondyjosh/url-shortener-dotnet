@@ -1,3 +1,3 @@
 # LinksApi.Web
 
-TODO: Description
+WebAPI application for URL shortening/retrieval.
