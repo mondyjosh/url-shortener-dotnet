@@ -1,8 +1,8 @@
 namespace LinksApi;
 
-public class ShortUrlSettingsOptions
+public class ShortLinkSettingsOptions
 {
-    public const string ShortUrlSettings = "ShortUrlSettings";
+    public const string ShortLinkSettings = nameof(ShortLinkSettings);
 
     public string HttpScheme { get; set; } = "https";
     public string Domain { get; set; } = string.Empty;

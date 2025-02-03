@@ -12,8 +12,8 @@ class LinksService : ILinksService
 {
     public LinksService(IConfiguration config, ILinksRepository linksRepository)
     {
-        _shortUrlSettings = new ShortUrlSettingsOptions();
-        config.GetSection(ShortUrlSettingsOptions.ShortUrlSettings).Bind(_shortUrlSettings);
+        _shortLinkSettings = new ShortLinkSettingsOptions();
+        config.GetSection(ShortLinkSettingsOptions.ShortLinkSettings).Bind(_shortLinkSettings);
 
         _linksRepository = linksRepository;
     }
@@ -40,18 +40,18 @@ class LinksService : ILinksService
         return MapRetrieveUrlResponse(record);
     }
 
-    private string GenerateShortLink(string longUrl)
+    string GenerateShortLink(string longUrl)
     {
         var encoded = Base62Encoder.EncodeAsBase62String(longUrl);
 
         // Trim encoded to desired length and assemble full shortlink.
-        return $"{_shortUrlSettings.HttpScheme}://{_shortUrlSettings.Domain}/{encoded[.._shortUrlSettings.PathLength]}";
+        return $"{_shortLinkSettings.HttpScheme}://{_shortLinkSettings.Domain}/{encoded[.._shortLinkSettings.PathLength]}";
     }
 
-    private static ShortLinkResponse MapShortLinkResponse(Link record) => new() { ShortLink = record.ShortLink };
-    private static RetrieveUrlResponse MapRetrieveUrlResponse(Link record) => new() { LongUrl = record.LongUrl };
+    private static ShortLinkResponse MapShortLinkResponse(Link record) => new() { ShortLink = record.ShortLink, LongUrl = record.LongUrl };
+    private static RetrieveUrlResponse MapRetrieveUrlResponse(Link record) => new() { LongUrl = record.LongUrl, ShortLink = record.ShortLink };
 
-    private readonly ShortUrlSettingsOptions _shortUrlSettings;    
+    private readonly ShortLinkSettingsOptions _shortLinkSettings;    
     private readonly ILinksRepository _linksRepository;
 
 }
