@@ -14,7 +14,7 @@ namespace LinksApi.Web.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
-public class LinksController(IConfiguration config, ILinksService linksService) : ControllerBase
+public class LinksController(ILinksService linksService) : ControllerBase
 {
     /// <summary>
     /// Creates a short link.
@@ -77,15 +77,5 @@ public class LinksController(IConfiguration config, ILinksService linksService) 
         }
     }
 
-    [HttpGet("cxnstring")]
-    public IActionResult RetrieveConnectionString() 
-    {
-        var connectionstring = _config.GetConnectionString("DefaultConnection") ?? throw new ArgumentNullException("Missing ConnectionStrings:DefaultConnection");
-
-        return Ok(connectionstring);
-    }
-
     private readonly ILinksService _linksService = linksService;
-
-    private readonly IConfiguration _config = config;
 }
