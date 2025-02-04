@@ -31,16 +31,9 @@ public class LinksController(ILinksService linksService) : ControllerBase
     [Produces(MediaTypeNames.Application.Json)]
     public async Task<IActionResult> ShortenLinkAsync([Required] ShortLinkRequest request)
     {
-        try
-        {
-            var response = await _linksService.ShortenLinkAsync(request);
+        var response = await _linksService.ShortenLinkAsync(request);
 
-            return Ok(response);
-        }
-        catch (UriFormatException ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        return Ok(response);
     }
 
     /// <summary>
@@ -58,23 +51,15 @@ public class LinksController(ILinksService linksService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Produces(MediaTypeNames.Application.Json)]
-    public async Task<IActionResult> RetrieveUrlAsync([Required][FromRoute] string shortLink)
+    public async Task<IActionResult> RetrieveUrlAsync([FromRoute] string shortLink)
     {
-        try
-        {
-            var request = new RetrieveUrlRequest(HttpUtility.UrlDecode(shortLink));
-            var response = await _linksService.RetrieveUrlAsync(request);
+        var request = new RetrieveUrlRequest { ShortLink = shortLink };
 
-            return Ok(response);
-        }
-        catch (ShortLinkNotFoundException ex)
-        {
-            return NotFound(ex.Message);
-        }
-        catch (UriFormatException ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        if (!TryValidateModel(request)) return ValidationProblem(ModelState);
+
+        var response = await _linksService.RetrieveUrlAsync(request);
+
+        return Ok(response);
     }
 
     private readonly ILinksService _linksService = linksService;

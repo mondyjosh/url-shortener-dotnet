@@ -3,6 +3,8 @@ using System.Reflection;
 using Microsoft.OpenApi.Models;
 
 using LinksApi;
+using Microsoft.AspNetCore.Diagnostics;
+using LinksApi.Exceptions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +21,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc(
-        "v1", 
+        "v1",
         new OpenApiInfo
         {
             Version = "v1",
@@ -44,6 +46,20 @@ app.UseSwaggerUI();
 app.MapGet("/", () => Results.Redirect("/swagger")).ExcludeFromDescription();
 
 app.UseHttpsRedirection();
+
+app.UseExceptionHandler(exceptionHandlerApp =>
+{
+    exceptionHandlerApp.Run(async context =>
+    {
+        var exception = context.Features.Get<IExceptionHandlerFeature>()?.Error;
+
+        if (exception is ShortLinkNotFoundException)
+        {
+            context.Response.StatusCode = StatusCodes.Status404NotFound;
+            await context.Response.WriteAsJsonAsync(new { error = exception.Message });
+        }
+    });
+});
 
 app.UseAuthorization();
 
