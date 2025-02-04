@@ -71,5 +71,5 @@ class LinksRepository(IConfiguration config) : ILinksRepository
         return await connection.QuerySingleOrDefaultAsync<Link>(sql, new { shortLink });
     }
 
-    private readonly string _connectionString = config.GetConnectionString("DefaultConnection") ?? throw new ArgumentNullException("Missing ConnectionStrings:DefaultConnection");    
+    private readonly string _connectionString = config.GetConnectionString("DefaultConnection") ?? throw new ArgumentNullException("Missing ConnectionStrings:DefaultConnection");
 }

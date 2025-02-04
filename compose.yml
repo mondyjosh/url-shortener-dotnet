@@ -10,7 +10,11 @@ services:
       db:
         condition: service_healthy
     environment:
-      ConnectionStrings__DefaultConnection: /run/secrets/connectionstring
+      # ConnectionStrings__DefaultConnection: /run/secrets/connectionstring
+      # ConnectionStrings__DefaultConnection: Server=postgres;Port=5432;Database=postgres;User Id=postgres;Password=postgres;
+      ConnectionStrings__DefaultConnection: Host=db;Port=5432;Database=postgres;User Id=postgres;Password=postgres;
+
+      #       - ConnectionStrings__DefaultConnection=User ID =postgres;Password=postgres;Server=app_db;Port=5432;Database=SampleDriverDb; Integrated Security=true;Pooling=true;
 
   db:
     container_name: db
@@ -27,12 +31,13 @@ services:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD_FILE=/run/secrets/db_password
+      # - POSTGRES_PASSWORD=postgres
     ports:
       - 5432:5432
     expose:
       - 5432
     healthcheck:
-      test: ["CMD", "pg_isready"]
+      test: ["CMD", "pg_isready -U postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -40,8 +45,8 @@ services:
 secrets:
   db_password:
     file: secrets/db_password.txt
-  connectionstring:
-    file: secrets/connectionstring.txt
+  # connectionstring:
+  #   file: secrets/connectionstring.txt
 
 volumes:
   db_data:

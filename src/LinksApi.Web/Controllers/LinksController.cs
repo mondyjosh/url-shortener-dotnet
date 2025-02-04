@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using LinksApi.Exceptions;
 using LinksApi.Requests;
+using System.Web;
 
 namespace LinksApi.Web.Controllers;
 
@@ -13,7 +14,7 @@ namespace LinksApi.Web.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
-public class LinksController(ILinksService linksService) : ControllerBase
+public class LinksController(IConfiguration config, ILinksService linksService) : ControllerBase
 {
     /// <summary>
     /// Creates a short link.
@@ -76,5 +77,15 @@ public class LinksController(ILinksService linksService) : ControllerBase
         }
     }
 
+    [HttpGet("cxnstring")]
+    public IActionResult RetrieveConnectionString() 
+    {
+        var connectionstring = _config.GetConnectionString("DefaultConnection") ?? throw new ArgumentNullException("Missing ConnectionStrings:DefaultConnection");
+
+        return Ok(connectionstring);
+    }
+
     private readonly ILinksService _linksService = linksService;
+
+    private readonly IConfiguration _config = config;
 }
