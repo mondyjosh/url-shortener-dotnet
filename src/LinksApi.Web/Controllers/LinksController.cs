@@ -3,7 +3,6 @@ using System.Net.Mime;
 
 using Microsoft.AspNetCore.Mvc;
 
-using LinksApi.Exceptions;
 using LinksApi.Requests;
 using System.Web;
 
@@ -53,7 +52,7 @@ public class LinksController(ILinksService linksService) : ControllerBase
     [Produces(MediaTypeNames.Application.Json)]
     public async Task<IActionResult> RetrieveUrlAsync([FromRoute] string shortLink)
     {
-        var request = new RetrieveUrlRequest { ShortLink = shortLink };
+        var request = new RetrieveUrlRequest { ShortLink = HttpUtility.UrlDecode(shortLink) };
 
         if (!TryValidateModel(request)) return ValidationProblem(ModelState);
 
