@@ -4,7 +4,7 @@ using System.Text;
 namespace LinksApi;
 
 /// <summary>
-/// asdfasdf
+/// Base62 encoder for strings.
 /// </summary>
 /// <remarks>
 /// The base-62 encoding scheme uses 62 characters ([0-9A-Za-z]).
