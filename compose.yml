@@ -1,5 +1,5 @@
 services:
-  app:
+  server:
     container_name: linksapi_appserver
     build:
       context: .
@@ -10,10 +10,10 @@ services:
       db:
         condition: service_healthy
     environment:
-      ConnectionStrings__DefaultConnection: /run/secrets/app_defaultconnectionstring
+      ConnectionStrings__DefaultConnection: Host=db;Port=5432;Database=postgres;User Id=postgres;Password=postgres;
 
   db:
-    container_name: db
+    container_name: postgres_db
     build:
       context: .
       dockerfile: db/Dockerfile
@@ -40,8 +40,8 @@ services:
 secrets:
   db_password:
     file: secrets/db_password.txt
-  app_defaultconnectionstring:
-    file: secrets/app_defaultconnectionstring.txt
+  # app_defaultconnectionstring:
+  #   file: secrets/app_defaultconnectionstring.txt
 
 volumes:
   db_data:
