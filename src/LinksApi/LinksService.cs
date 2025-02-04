@@ -12,8 +12,8 @@ class LinksService : ILinksService
 {
     public LinksService(IConfiguration config, ILinksRepository linksRepository)
     {
-        _shortLinkSettings = new ShortLinkConfigurationOptions();
-        config.GetSection(ShortLinkConfigurationOptions.ShortLinkConfiguration).Bind(_shortLinkSettings);
+        _shortLinkSettings = new ShortLinkSettingsOptions();
+        config.GetSection(ShortLinkSettingsOptions.ShortLinkSettings).Bind(_shortLinkSettings);
 
         _linksRepository = linksRepository;
     }
@@ -51,7 +51,7 @@ class LinksService : ILinksService
     private static ShortLinkResponse MapShortLinkResponse(Link record) => new() { ShortLink = record.ShortLink, LongUrl = record.LongUrl };
     private static RetrieveUrlResponse MapRetrieveUrlResponse(Link record) => new() { LongUrl = record.LongUrl, ShortLink = record.ShortLink };
 
-    private readonly ShortLinkConfigurationOptions _shortLinkSettings;    
+    private readonly ShortLinkSettingsOptions _shortLinkSettings;    
     private readonly ILinksRepository _linksRepository;
 
 }
