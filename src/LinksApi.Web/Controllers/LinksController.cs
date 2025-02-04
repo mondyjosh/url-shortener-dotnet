@@ -45,8 +45,8 @@ public class LinksController(ILinksService linksService) : ControllerBase
     /// <summary>
     /// Retrieves an original URL from short link.
     /// </summary>
-    /// <param name="request">
-    /// The request object that supplies the shortened link used to retrieve the original URL.
+    /// <param name="shortLink">
+    /// The shortened link used to retrieve the original URL.
     /// </param>
     /// <returns>The original long URL.</returns>
     /// <response code="200">Returns the original URL.</response>
@@ -57,10 +57,11 @@ public class LinksController(ILinksService linksService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Produces(MediaTypeNames.Application.Json)]
-    public async Task<IActionResult> RetrieveUrlAsync([Required][FromRoute] RetrieveUrlRequest request)
+    public async Task<IActionResult> RetrieveUrlAsync([Required][FromRoute] string shortLink)
     {
         try
         {
+            var request = new RetrieveUrlRequest(HttpUtility.UrlDecode(shortLink));
             var response = await _linksService.RetrieveUrlAsync(request);
 
             return Ok(response);
