@@ -18,7 +18,7 @@ docker compose up --build
 Alternatively, run the project detached from the terminal by adding the `-d` option
 
 ```sh
-docker compose up --build
+docker compose up --build -d
 ```
 
 The application will be available at <http://localhost:8081>. 
