@@ -40,8 +40,6 @@ services:
 secrets:
   db_password:
     file: secrets/db_password.txt
-  # app_defaultconnectionstring:
-  #   file: secrets/app_defaultconnectionstring.txt
 
 volumes:
   db_data:
