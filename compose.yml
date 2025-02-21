@@ -17,7 +17,7 @@ services:
     build:
       context: .
       dockerfile: db/Dockerfile
-    image: postgres:16
+    image: postgres
     restart: always
     secrets:
       - db_password
@@ -27,6 +27,8 @@ services:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD_FILE=/run/secrets/db_password
+    ports:
+      - 5432:5432
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "postgres"]
       interval: 10s
