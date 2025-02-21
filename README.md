@@ -21,6 +21,6 @@ Alternatively, run the project detached from the terminal by adding the `-d` opt
 docker compose up --build -d
 ```
 
-The application will be available at <http://localhost:8081>. 
+The application will be available at <http://localhost:8080>. 
 
 Feel free to test API calls with the Swagger UI!
