@@ -1,6 +1,54 @@
 services:
-  server:
-    container_name: linksapi_appserver
+  # PostgreSQL Database
+  db:
+    image: postgres:16
+    container_name: postgres_db
+    restart: always
+    secrets:
+      - db_password
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      # - ./db/init/init.sql:/docker-entrypoint-initdb.d # TODO: Create service users
+    ports:
+      - 5432:5432
+    # env_file: # TODO: Environments
+    #   - .env
+    #   - .env.custom
+    environment:
+      # - POSTGRES_USER=${POSTGRES_USER}
+      # - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD_FILE=/run/secrets/db_password ## TODO: Multiple passwords
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Migrations to initialize Postgres DB
+  migrations:
+    image: flyway/flyway:11
+    container_name: flyway_migrations
+    secrets:
+      - db_password
+    command: [
+        "-url=jdbc:postgresql://db:5432/postgres",
+        "-schemas=public",
+        "-user=postgres", ## TODO: Create flyway user to handle migrations
+        "-password=postgres", ## TODO: flyway password
+        "-connectRetries=60",
+        "migrate",
+      ]
+    volumes:
+      - ./db/migrations:/flyway/sql
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # Web service running ASP.NET Core web API
+  backend:
+    container_name: linksapi_backend
     build:
       context: .
       target: final
@@ -9,35 +57,16 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      migrations:
+        condition: service_completed_successfully
     environment:
-      ConnectionStrings__DefaultConnection: Host=db;Port=5432;Database=postgres;User Id=postgres;Password=postgres;
+      ConnectionStrings__DefaultConnection: /run/secrets/db_connectionstring
 
-  db:
-    container_name: postgres_db
-    build:
-      context: .
-      dockerfile: db/Dockerfile
-    image: postgres
-    restart: always
-    secrets:
-      - db_password
-    volumes:
-      - db_data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD_FILE=/run/secrets/db_password
-    ports:
-      - 5432:5432
-    healthcheck:
-      test: ["CMD", "pg_isready", "-U", "postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-secrets:
+secrets: # TODO: Way more secrets!
   db_password:
     file: secrets/db_password.txt
+  db_connectionstring:
+    file: secrets/db_connectionstring.txt
 
 volumes:
   db_data:

@@ -1,9 +1,6 @@
-using Microsoft.Extensions.Configuration;
-
 using Dapper;
-
 using LinksApi.Data.Models;
-
+using Microsoft.Extensions.Configuration;
 using Npgsql;
 
 namespace LinksApi.Data;
@@ -31,11 +28,15 @@ class LinksRepository(IConfiguration config) : ILinksRepository
         return link;
     }
 
-    async Task<Link?> ILinksRepository.GetLinkFromLongUrlAsync(string longUrl)
+    async Task<Link?> ILinksRepository.GetLinkFromLongUrlAsync(string longUrl) => await GetLinkAsync("long_url", longUrl);
+
+    async Task<Link?> ILinksRepository.GetLinkFromShortLinkAsync(string shortLink) => await GetLinkAsync("short_link", shortLink);
+
+    private async Task<Link?> GetLinkAsync(string column, string value)
     {
         using var connection = new NpgsqlConnection(_connectionString);
 
-        var sql = @"
+        var sql = $@"
             SELECT
                 id,
                 short_link,
@@ -45,30 +46,10 @@ class LinksRepository(IConfiguration config) : ILinksRepository
             FROM
                 links
             WHERE 
-                long_url = @longUrl
+                {column} = @value
         ";
 
-        return await connection.QuerySingleOrDefaultAsync<Link>(sql, new { longUrl });
-    }
-
-    async Task<Link?> ILinksRepository.GetLinkFromShortLinkAsync(string shortLink)
-    {
-        using var connection = new NpgsqlConnection(_connectionString);
-
-        var sql = @"
-            SELECT
-                id,
-                short_link,
-                long_url,
-                created_at,
-                updated_at
-            FROM
-                links
-            WHERE 
-                short_link = @shortLink
-        ";
-
-        return await connection.QuerySingleOrDefaultAsync<Link>(sql, new { shortLink });
+        return await connection.QuerySingleOrDefaultAsync<Link>(sql, new { value });
     }
 
     private readonly string _connectionString = config.GetConnectionString("DefaultConnection") ?? throw new ArgumentNullException("Missing ConnectionStrings:DefaultConnection");
