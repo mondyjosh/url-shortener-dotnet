@@ -1,7 +1,0 @@
-# [environments.development]
-# url = "jdbc:sqlite:/flyway/project/dev.db"
-# user= "admin"
-# password = "password1"
-
-# [flyway]
-# environment = "development"

@@ -28,20 +28,22 @@ services:
 
   # Migrations to initialize Postgres DB
   migrations:
-    image: flyway/flyway:11
+    image: redgate/flyway:11
     container_name: flyway_migrations
     secrets:
       - db_password
-    command: [
-        "-url=jdbc:postgresql://db:5432/postgres",
-        "-schemas=public",
-        "-user=postgres", ## TODO: Create flyway user to handle migrations
-        "-password=postgres", ## TODO: flyway password
-        "-connectRetries=60",
-        "migrate",
-      ]
+    command: migrate
+    # command: [
+    #     "-url=jdbc:postgresql://db:5432/postgres",
+    #     "-schemas=public",
+    #     "-user=postgres", ## TODO: Create flyway user to handle migrations
+    #     "-password=postgres", ## TODO: flyway password
+    #     "-connectRetries=60",
+    #     "migrate",
+    #   ]
     volumes:
       - ./db/migrations:/flyway/sql
+      - ./flyway.toml:/flyway/conf/flyway.toml
     depends_on:
       db:
         condition: service_healthy
@@ -54,13 +56,14 @@ services:
       target: final
     ports:
       - 8080:8080
+    # TODO: env_file
+    environment:
+      ConnectionStrings__DefaultConnection: /run/secrets/db_connectionstring
     depends_on:
       db:
         condition: service_healthy
       migrations:
         condition: service_completed_successfully
-    environment:
-      ConnectionStrings__DefaultConnection: /run/secrets/db_connectionstring
 
 secrets: # TODO: Way more secrets!
   db_password:
