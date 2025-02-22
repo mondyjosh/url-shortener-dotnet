@@ -1,3 +1,3 @@
-# LinksApi Migrations
+# LinksApi Database Migrations
 
-Migrations for LinksApi, powered by the [Redgate Flyway Docker images](https://hub.docker.com/r/redgate/flyway).
+Database migrations for LinksApi, powered by the [Redgate Flyway Docker images](https://hub.docker.com/r/redgate/flyway).

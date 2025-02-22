@@ -1,7 +1,7 @@
 [environments.development]
 url = "jdbc:postgresql://db:5432/postgres"
-user = "postgres"                          # TODO: Create flyway user to handle migrations
-password = "postgres"                      #TODO: Flyway user password
+user = "migrations_flyway"                         
+password = "development"
 schemas = ["public"]
 connectRetries = 60
 

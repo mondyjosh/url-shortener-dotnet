@@ -8,20 +8,20 @@ services:
       - db_password
     volumes:
       - db_data:/var/lib/postgresql/data
-      # - ./db/init/init.sql:/docker-entrypoint-initdb.d # TODO: Create service users
+      - ./db/init/roles.sql:/docker-entrypoint-initdb.d/roles.sql
     ports:
       - 5432:5432
-    # env_file: # TODO: Environments
+    # env_file: # TODO: Environments, maybe?
     #   - .env
     #   - .env.custom
     environment:
-      # - POSTGRES_USER=${POSTGRES_USER}
-      # - POSTGRES_DB=${POSTGRES_DB}
+      # - POSTGRES_USER=${POSTGRES_USER} #TODO
+      # - POSTGRES_DB=${POSTGRES_DB} #TODO
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD_FILE=/run/secrets/db_password ## TODO: Multiple passwords
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "postgres"]
+      test: ["CMD", "pg_isready", "-U", "postgres"] ## TODO: healthcheck by someone else?
       interval: 10s
       timeout: 5s
       retries: 5
@@ -50,7 +50,7 @@ services:
       - 8080:8080
     # TODO: env_file
     environment:
-      ConnectionStrings__DefaultConnection: /run/secrets/db_connectionstring
+      ConnectionStrings__DefaultConnection: /run/secrets/db_connectionstring ## TODO: Fix?
     depends_on:
       db:
         condition: service_healthy
