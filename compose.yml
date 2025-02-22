@@ -33,14 +33,6 @@ services:
     secrets:
       - db_password
     command: migrate
-    # command: [
-    #     "-url=jdbc:postgresql://db:5432/postgres",
-    #     "-schemas=public",
-    #     "-user=postgres", ## TODO: Create flyway user to handle migrations
-    #     "-password=postgres", ## TODO: flyway password
-    #     "-connectRetries=60",
-    #     "migrate",
-    #   ]
     volumes:
       - ./db/migrations:/flyway/sql
       - ./flyway.toml:/flyway/conf/flyway.toml

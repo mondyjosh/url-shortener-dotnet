@@ -7,11 +7,4 @@ connectRetries = 60
 
 [flyway]
 environment = "development"
-
-
-# "-url=jdbc:postgresql://db:5432/postgres",
-# "-schemas=public",
-# "-user=postgres", ## TODO: Create flyway user to handle migrations
-# "-password=postgres", ## TODO: flyway password
-# "-connectRetries=60",
-# "migrate",
+locations = ["filesystem:./sql"]
