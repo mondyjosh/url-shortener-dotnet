@@ -21,7 +21,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD_FILE=/run/secrets/db_password ## TODO: Multiple passwords
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "postgres"] ## TODO: healthcheck by someone else?
+      test: ["CMD", "pg_isready", "-U", "healthcheck"]
       interval: 10s
       timeout: 5s
       retries: 5

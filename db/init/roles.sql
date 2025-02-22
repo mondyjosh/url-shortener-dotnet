@@ -1,6 +1,17 @@
 -- Dedicated user setup for migrations user and site user originally sourced from:
 -- https://www.jujens.eu/posts/en/2021/Mar/10/db-user-migrations/
 
+-- Create login role for healthcheck
+CREATE USER healthcheck 
+WITH 
+    NOINHERIT;
+
+-- Grant connect privilege to healthcheck role
+GRANT 
+    CONNECT 
+ON DATABASE postgres
+TO healthcheck;
+
 -- Create login role for Flyway migrations with database and role creation privileges
 CREATE USER migrations_flyway
 WITH
