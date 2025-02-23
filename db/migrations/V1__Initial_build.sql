@@ -3,7 +3,7 @@ CREATE TABLE
     id serial PRIMARY KEY,
     short_link text NOT NULL,
     long_url text NOT NULL,
-    created_at123 timestamptz NOT NULL DEFAULT NOW (),
+    created_at timestamptz NOT NULL DEFAULT NOW (),
     updated_at timestamptz NOT NULL DEFAULT NOW (),
     CONSTRAINT unq_short_link UNIQUE (short_link)
   );
