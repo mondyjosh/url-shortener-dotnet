@@ -15,7 +15,7 @@ This application relies on Docker and Docker Compose. Ensure you have the follow
 - **[Docker](https://docs.docker.com/engine/install/)** (latest version recommended)
 - **[Docker Compose](https://docs.docker.com/compose/)** (V2.x or later)
 
-Start the application by running the following `docker compose` command inside the `/interviews.2025.ascribe` project directory:
+Start the application by running `docker compose` inside the `/interviews.2025.ascribe` project directory:
 
 ```sh
 docker compose up --build
