@@ -14,12 +14,12 @@ export BACKEND_PASSWORD=$(cat /run/secrets/db_backend_password)
 
 # Migrations user and site user ref: https://www.jujens.eu/posts/en/2021/Mar/10/db-user-migrations/
 # --set ON_ERROR_STOP=on: Stop script execution if any error occurs
-psql --set ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
+psql --set ON_ERROR_STOP=1 --username "$DB_USER" --dbname "$DB_NAME" <<-EOSQL
     -- Create login role for healthcheck
     CREATE USER $HEALTHCHECK_ROLE WITH NOINHERIT;
 
     -- Grant connect privilege to healthcheck role
-    GRANT CONNECT ON DATABASE $POSTGRES_DB TO $HEALTHCHECK_ROLE;
+    GRANT CONNECT ON DATABASE $DB_NAME TO $HEALTHCHECK_ROLE;
 
     -- Create login role for migrations with database and role creation privileges
     CREATE USER $MIGRATIONS_ROLE WITH CREATEDB CREATEROLE PASSWORD '$MIGRATIONS_PASSWORD';

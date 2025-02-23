@@ -8,41 +8,21 @@ services:
       - db_postgres_password
       - db_migrations_password
       - db_backend_password
-      # - source: database_initialization
-      #   target: "/docker-entrypoint-initdb.d/init-db.sh"
-      #   # Grant read and execute permission to owner, execute and read to group and others
-      #   mode: 0755
-      #   # The uid for root is due to the permissions for the init.db folder for image
-      #   uid: "0"
     volumes:
       - db_data:/var/lib/postgresql/data
       - ./db/init:/docker-entrypoint-initdb.d/
-      # - ./db/init/roles.sql:/docker-entrypoint-initdb.d/roles.sql
-      # - ./db/init/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
     ports:
       - 5432:5432
     env_file: .env
     environment:
       MIGRATIONS_ROLE: ${MIGRATIONS_ROLE}
-      POSTGRES_USER: ${POSTGRES_USER}
-      # POSTGRES_PASSWORD: postgres # TODO: not this, source from db_postgres_password
+      DB_USER: ${DB_USER}
       POSTGRES_PASSWORD_FILE: /run/secrets/db_postgres_password
-      POSTGRES_DB: ${POSTGRES_DB}
+      DB_NAME: ${DB_NAME}
       HEALTHCHECK_ROLE: ${HEALTHCHECK_ROLE}
-      ##
-      APP_DB_USER: docker
-      APP_DB_PASS: docker
-      APP_DB_NAME: docker
     healthcheck:
       test:
-        [
-          "CMD",
-          "pg_isready",
-          "-U",
-          "${HEALTHCHECK_ROLE}",
-          "-d",
-          "${POSTGRES_DB}",
-        ]
+        ["CMD", "pg_isready", "-U", "${HEALTHCHECK_ROLE}", "-d", "${DB_NAME}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -59,13 +39,14 @@ services:
         "-c",
         "export FLYWAY_PASSWORD=$(cat /run/secrets/db_migrations_password) && flyway migrate",
       ]
-    command: migrate
     volumes:
       - ./db/migrations:/flyway/sql
     env_file: .env
     environment:
+      FLYWAY_BASELINE_ON_MIGRATE: true
+      FLYWAY_VALIDATE_ON_MIGRATE: true
       FLYWAY_USER: ${MIGRATIONS_ROLE}
-      FLYWAY_URL: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${POSTGRES_DB}
+      FLYWAY_URL: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
       FLYWAY_CONNECT_RETRIES: ${FLYWAY_CONNECT_RETRIES}
       FLYWAY_LOCATIONS: filesystem:/flyway/sql
       FLYWAY_SCHEMAS: ${FLYWAY_SCHEMAS}
@@ -76,14 +57,19 @@ services:
   # Backend Service - running ASP.NET Core web API app
   backend:
     container_name: linksapi_backend
+    secrets:
+      - backend_connectionstring
     build:
       context: .
       target: final
     ports:
       - 8080:8080
-    # TODO: env_file?
-    environment:
-      ConnectionStrings__DefaultConnection: /run/secrets/backend_connectionstring ## TODO: Rewrite connectionstring
+    entrypoint:
+      [
+        "sh",
+        "-c",
+        "set -e; export ConnectionStrings__DefaultConnection=$(cat /run/secrets/backend_connectionstring) && exec dotnet LinksApi.Web.dll",
+      ]
     depends_on:
       db:
         condition: service_healthy
