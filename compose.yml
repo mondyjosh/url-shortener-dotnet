@@ -13,10 +13,10 @@ services:
       - 5432:5432
     env_file: .env
     environment:
-      HEALTHCHECK_USER: ${HEALTHCHECK_USER}
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_PASSWORD_FILE: /run/secrets/db_postgres_password
       POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_postgres_password
+      POSTGRES_DB: ${POSTGRES_DB}
+      HEALTHCHECK_USER: ${HEALTHCHECK_USER}
     healthcheck:
       test:
         [
@@ -48,11 +48,11 @@ services:
       - ./db/migrations:/flyway/sql
     env_file: .env
     environment:
-      FLYWAY_URL: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${POSTGRES_DB}
       FLYWAY_USER: ${FLYWAY_USER}
-      FLYWAY_SCHEMAS: ${FLYWAY_SCHEMAS}
+      FLYWAY_URL: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${POSTGRES_DB}
       FLYWAY_CONNECT_RETRIES: ${FLYWAY_CONNECT_RETRIES}
       FLYWAY_LOCATIONS: filesystem:/flyway/sql
+      FLYWAY_SCHEMAS: ${FLYWAY_SCHEMAS}
     depends_on:
       db:
         condition: service_healthy
@@ -67,7 +67,7 @@ services:
       - 8080:8080
     # TODO: env_file?
     environment:
-      ConnectionStrings__DefaultConnection: /run/secrets/backend_connectionstring ## TODO: Rewrite connectionstring?
+      ConnectionStrings__DefaultConnection: /run/secrets/backend_connectionstring ## TODO: Rewrite connectionstring
     depends_on:
       db:
         condition: service_healthy
