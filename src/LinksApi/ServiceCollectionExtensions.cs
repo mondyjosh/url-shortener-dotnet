@@ -7,6 +7,9 @@ using LinksApi.Data;
 
 namespace LinksApi;
 
+/// <summary>
+/// Extension methods for registering LinksApi services in dependency injection.
+/// </summary>
 public static class ServiceCollectionExtensions
 {
     /// <summary>

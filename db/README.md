@@ -1,22 +1,22 @@
-# LinksApi Migrations
+# LinksApi Database Migrations
 
 This directory contains the database migration setup and initialization scripts for managing PostgreSQL schema changes using Flyway and a custom initialization script.
 
 ## Overview
 
-- **Flyway**: Handles versioned database migrations.
-  - [Redgate Flyway Documentation](https://documentation.red-gate.com/fd)
-  - [Redgate Flyway Docker images](https://hub.docker.com/r/redgate/flyway)
+- **[Flyway](https://documentation.red-gate.com/fd)**: Handles versioned database migrations.
 - **/db/init/init-db.sh**: A shell script that sets up initial database roles and privileges.
 - **Secrets:** Passwords for different database roles are sourced via `compose.yml` when Docker Compose runs.
 
 ## Directory Structure
 
 ```
-├── db
-│   ├── init/init-db.sh  # Custom script for setting up roles and permissions
-│   └── migrations       # Directory containing Flyway migration scripts
+└── db
+    ├── init/init-db.sh  # Custom script for setting up roles and permissions
+    └── migrations       # Directory containing Flyway migration scripts
 ```
+
+The `/migrations` directory contains all migrations to run in numbered sequence. Future migrations belong here!
 
 ## Setup & Usage
 
