@@ -46,26 +46,13 @@ services:
     command: migrate
     volumes:
       - ./db/migrations:/flyway/sql
-      # - ./db/flyway.conf:/flyway/conf/flyway.conf
     env_file: .env
     environment:
-      # - DB_HOST=${DB_HOST}
-      # - DB_PORT=${DB_PORT}
       FLYWAY_URL: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${POSTGRES_DB}
       FLYWAY_USER: ${FLYWAY_USER}
-      # FLYWAY_PASSWORD: /run/secrets/db_migrations_password
       FLYWAY_SCHEMAS: ${FLYWAY_SCHEMAS}
       FLYWAY_CONNECT_RETRIES: ${FLYWAY_CONNECT_RETRIES}
       FLYWAY_LOCATIONS: filesystem:/flyway/sql
-      # - POSTGRES_DB=${POSTGRES_DB}
-
-    #       flyway.url=${FLYWAY_URL}
-    # flyway.user=${FLYWAY_USER}
-    # flyway.password=${FLYWAY_PASSWORD}
-    # flyway.schemas=public
-    # flyway.connectRetries = 60
-    # flyway.locations=filesystem:./sql
-
     depends_on:
       db:
         condition: service_healthy
@@ -80,7 +67,7 @@ services:
       - 8080:8080
     # TODO: env_file?
     environment:
-      ConnectionStrings__DefaultConnection: /run/secrets/backend_connectionstring ## TODO: Fix?
+      ConnectionStrings__DefaultConnection: /run/secrets/backend_connectionstring ## TODO: Rewrite connectionstring?
     depends_on:
       db:
         condition: service_healthy
