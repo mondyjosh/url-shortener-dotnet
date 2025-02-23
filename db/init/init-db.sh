@@ -27,15 +27,18 @@ psql --set ON_ERROR_STOP=1 --username "$DB_USER" --dbname "$DB_NAME" <<-EOSQL
     -- Create login role for backend with default permissions
     CREATE USER $BACKEND_ROLE WITH PASSWORD '$BACKEND_PASSWORD';
 
-    -- Ensure future tables grant the same permissions to backend role by default
-    ALTER DEFAULT PRIVILEGES
+    -- Grant CRUD permissions to backend role
+    GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO $BACKEND_ROLE;
+
+    -- Ensure future tables created by migrations grant CRUD permissions to backend role by default
+    ALTER DEFAULT PRIVILEGES FOR ROLE $MIGRATIONS_ROLE
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO $BACKEND_ROLE;
 
     -- Grant sequence usage for auto-incrementing fields to backend role
     GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO $BACKEND_ROLE;
 
-    -- Ensure future sequences grant the same permissions to backend role by default
-    ALTER DEFAULT PRIVILEGES 
+    -- Ensure future sequences created by migrations grant the same permissions to backend role by default
+    ALTER DEFAULT PRIVILEGES FOR ROLE $MIGRATIONS_ROLE
     GRANT USAGE, SELECT ON SEQUENCES TO $BACKEND_ROLE;
 
     -- Revoke grant option for all privileges for backend role by default
