@@ -22,7 +22,7 @@ The **LinksApi** library project contains the core business logic for URL shorte
         ├── Responses                           # Directory for service response models
         ├── I{T}Service.cs                      # Service interface
         ├── {T}Service.cs                       # Service implementation
-        ├── ServiceCollectionExtensions.cs      # Extension methods for registering services in dependency injection
+        ├── ServiceCollectionExtensions.cs      # Extension methods for registering services in DI
         └── {T}ConfigurationOptions.cs          # Configuration options for the service.
 ```
 
