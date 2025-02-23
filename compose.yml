@@ -5,23 +5,28 @@ services:
     container_name: postgres_db
     restart: always
     secrets:
-      - db_password
+      - db_postgres_password
     volumes:
       - db_data:/var/lib/postgresql/data
       - ./db/init/roles.sql:/docker-entrypoint-initdb.d/roles.sql
     ports:
       - 5432:5432
-    # env_file: # TODO: Environments, maybe?
-    #   - .env
-    #   - .env.custom
+    env_file: .env
     environment:
-      # - POSTGRES_USER=${POSTGRES_USER} #TODO
-      # - POSTGRES_DB=${POSTGRES_DB} #TODO
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD_FILE=/run/secrets/db_password ## TODO: Multiple passwords
+      HEALTHCHECK_USER: ${HEALTHCHECK_USER}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_postgres_password
+      POSTGRES_USER: ${POSTGRES_USER}
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "healthcheck"]
+      test:
+        [
+          "CMD",
+          "pg_isready",
+          "-U",
+          "${HEALTHCHECK_USER}",
+          "-d",
+          "${POSTGRES_DB}",
+        ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -31,11 +36,36 @@ services:
     image: redgate/flyway:11
     container_name: flyway_migrations
     secrets:
-      - db_password
+      - db_migrations_password
+    entrypoint:
+      [
+        "sh",
+        "-c",
+        "export FLYWAY_PASSWORD=$(cat /run/secrets/db_migrations_password) && flyway migrate",
+      ]
     command: migrate
     volumes:
       - ./db/migrations:/flyway/sql
-      - ./flyway.toml:/flyway/conf/flyway.toml
+      # - ./db/flyway.conf:/flyway/conf/flyway.conf
+    env_file: .env
+    environment:
+      # - DB_HOST=${DB_HOST}
+      # - DB_PORT=${DB_PORT}
+      FLYWAY_URL: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${POSTGRES_DB}
+      FLYWAY_USER: ${FLYWAY_USER}
+      # FLYWAY_PASSWORD: /run/secrets/db_migrations_password
+      FLYWAY_SCHEMAS: ${FLYWAY_SCHEMAS}
+      FLYWAY_CONNECT_RETRIES: ${FLYWAY_CONNECT_RETRIES}
+      FLYWAY_LOCATIONS: filesystem:/flyway/sql
+      # - POSTGRES_DB=${POSTGRES_DB}
+
+    #       flyway.url=${FLYWAY_URL}
+    # flyway.user=${FLYWAY_USER}
+    # flyway.password=${FLYWAY_PASSWORD}
+    # flyway.schemas=public
+    # flyway.connectRetries = 60
+    # flyway.locations=filesystem:./sql
+
     depends_on:
       db:
         condition: service_healthy
@@ -48,20 +78,22 @@ services:
       target: final
     ports:
       - 8080:8080
-    # TODO: env_file
+    # TODO: env_file?
     environment:
-      ConnectionStrings__DefaultConnection: /run/secrets/db_connectionstring ## TODO: Fix?
+      ConnectionStrings__DefaultConnection: /run/secrets/backend_connectionstring ## TODO: Fix?
     depends_on:
       db:
         condition: service_healthy
       migrations:
         condition: service_completed_successfully
 
-secrets: # TODO: Way more secrets!
-  db_password:
-    file: secrets/db_password.txt
-  db_connectionstring:
-    file: secrets/db_connectionstring.txt
+secrets:
+  backend_connectionstring:
+    file: secrets/backend_connectionstring.txt
+  db_postgres_password:
+    file: secrets/db_postgres_password.txt
+  db_migrations_password:
+    file: secrets/db_migrations_password.txt
 
 volumes:
   db_data:
