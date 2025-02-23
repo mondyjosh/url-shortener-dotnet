@@ -8,6 +8,24 @@ This project provides a web API for URL shortening/retrieval, built with .NET 8 
 
 See [LRES-Ascribe Technical Challenge](docs/Ascribe_Technical_Challenge.md) for details on project requirements and goals.
 
+## Directory Structure
+
+```
+├──📁 db
+│    ├── init/init-db.sh    # Custom script for setting up roles and permissions
+│    └── migrations         # Directory containing migration scripts ran by Flyway
+├──📁 docs                  # Contains project documentation
+├──📁 secrets               # Secrets for Docker Compose
+├──📁 src
+│   ├──📁 LinksApi          # Service library that contains URL shortening/retrieval core business logic 
+│   └──📁 LinksApi.Web      # Web API for URL shortening/retrieval
+├──📁 test
+│    └──📁 LinksApi.Tests   # Test project for LinksApi core business logic
+├── .env                    # Contains environment variables for Docker Compose
+├── Dockerfile              # Defines the containerization setup for the LinksApi.Web app
+└── compose.yml             # Defines and orchestrates containers for the full application (db, migrations, backend)
+```
+
 ## Building and Running the Application
 
 This application relies on Docker and Docker Compose. Ensure you have the following installed:

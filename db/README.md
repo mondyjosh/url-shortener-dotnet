@@ -11,9 +11,9 @@ This directory contains the database migration setup and initialization scripts 
 ## Directory Structure
 
 ```
-└── db
+└──📁 db
     ├── init/init-db.sh  # Custom script for setting up roles and permissions
-    └── migrations       # Directory containing Flyway migration scripts
+    └── migrations       # Directory containing migration scripts ran by Flyway
 ```
 
 The `/migrations` directory contains all migrations to run in numbered sequence. Future migrations belong here!

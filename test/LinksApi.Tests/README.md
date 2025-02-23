@@ -5,11 +5,11 @@ The **LinksApi.Tests** project contains unit tests for the **LinksApi** library.
 ## Directory Structure
 
 ```
-└── test
-    └── LinksApi.Tests
+└──📁 test
+    └──📁 LinksApi.Tests
         ├── GlobalUsings.cs
         ├── LinksApi.Tests.csproj
-        └── LinksServiceTests.cs    # Test files are named after the service under test
+        └── {T}Tests.cs    # Test files are named after the service under test
 ```
 
 Test files should be named after the service under test.

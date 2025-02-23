@@ -24,7 +24,6 @@ RUN --mount=type=cache,id=nuget,target=/root/.nuget/packages \
 # image from the build stage where the necessary files are copied from the build
 # stage.
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS final
-# EXPOSE 8080
 WORKDIR /app
 
 # Ensure the application binds to the correct port
