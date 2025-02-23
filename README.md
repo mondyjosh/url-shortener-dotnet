@@ -1,4 +1,13 @@
-# interviews.2025.ascribe
+# interviews.2025.ascribe (archived)
+
+>[!WARNING]
+>🚨 **This repository is archived and no longer maintained.** 🚨
+>
+>This project is no longer actively developed, as per https://github.com/mondyjosh/interviews.2025.ascribe/pull/16.
+>
+>The repository remains available for reference, but no further updates or support will be provided.
+>
+>**Note to future me:** Please use this repo as a basis for future technical take-home projects!
 
 This is a technical interview project for Ascribe in January 2025.
 
