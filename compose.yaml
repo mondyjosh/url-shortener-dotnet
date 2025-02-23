@@ -61,7 +61,7 @@ services:
       - backend_connectionstring
     build:
       context: .
-      target: final
+      target: runtime
     ports:
       - 8080:8080
     entrypoint:

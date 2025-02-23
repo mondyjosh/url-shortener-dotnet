@@ -1,40 +1,32 @@
 # syntax=docker/dockerfile:1
 
-################################################################################
-# Create a stage for building the application.
+# Build stage
 FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
-
 COPY . /source
-
 WORKDIR /source/src/LinksApi.Web
 
-# Target architecture is passed in by the builder.
-# Placing it here allows previous steps to be cached across architectures.
+# Allow architecture-specific builds 
+# Placed here to cache previous steps across architectures
 ARG TARGETARCH
 
-# Build the application.
-# Leverage a cache mount to /root/.nuget/packages
-# so that subsequent builds don't have to re-download packages.
+# Build with cached NuGet packages
 RUN --mount=type=cache,id=nuget,target=/root/.nuget/packages \
     dotnet publish -a $TARGETARCH --use-current-runtime --self-contained false -o /app
 
-################################################################################
-# Create a new stage for running the application that contains the minimal
-# runtime dependencies for the application. This often uses a different base
-# image from the build stage where the necessary files are copied from the build
-# stage.
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS final
+# Runtime stage
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS runtime
 WORKDIR /app
 
-# Ensure the application binds to the correct port
+# Ensure app binds to the correct port
 ENV ASPNETCORE_URLS=http://+:8080
 EXPOSE 8080
 
-# Copy everything needed to run the app from the "build" stage.
+# Copy built app from build stage
 COPY --from=build /app .
 
-# Switch to a non-privileged user (defined in the base image) 
-# that the app will run under, as per best practices.
+# Run as a non-root user 
+# Ref: https://devblogs.microsoft.com/dotnet/securing-containers-with-rootless/
 USER $APP_UID
 
+# Define runtime's main process
 ENTRYPOINT ["dotnet", "LinksApi.Web.dll"]
