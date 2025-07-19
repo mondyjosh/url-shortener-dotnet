@@ -1,21 +1,18 @@
-# interviews.2025.ascribe (archived)
+# URL Shortener - .NET 
 
->[!WARNING]
->🚨 **This repository is archived and no longer maintained.** 🚨
->
->This project is no longer actively developed, as per https://github.com/mondyjosh/interviews.2025.ascribe/pull/16.
->
->The repository remains available for reference, but no further updates or support will be provided.
->
->**Note to future me:** Please use this repo as a basis for future technical take-home projects!
+A simple web API for URL shortening/retrieval, built with .NET 8 and PostgreSQL.
 
-This is a technical interview project for Ascribe in January 2025.
+## Overview
 
-This project provides a web API for URL shortening/retrieval, built with .NET 8 and PostgreSQL.
+This project is a basic link shortening service, similar in concept to services like [bit.ly](https://bit.ly).  
+It includes an interface to input a URL and display the shortened version after submission.
 
-## Technical Challenge Details
+The API provides two main functions:
 
-See [LRES-Ascribe Technical Challenge](docs/Ascribe_Technical_Challenge.md) for details on project requirements and goals.
+1. Shorten a URL into a brief alphanumeric string.
+2. Expand a shortened string back to the original URL, returning an error if it doesn’t exist.
+
+It includes a simple storage mechanism to persist URLs and supports local development and testing with minimal configuration.
 
 ## Directory Structure
 
@@ -23,7 +20,6 @@ See [LRES-Ascribe Technical Challenge](docs/Ascribe_Technical_Challenge.md) for 
 ├──📁 db
 │    ├── init/init-db.sh    # Custom script for setting up roles and permissions
 │    └── migrations         # Directory containing migration scripts ran by Flyway
-├──📁 docs                  # Contains project documentation
 ├──📁 secrets               # Secrets for Docker Compose
 ├──📁 src
 │   ├──📁 LinksApi          # Service library that contains URL shortening/retrieval core business logic 
@@ -42,7 +38,7 @@ This application relies on Docker and Docker Compose. Ensure you have the follow
 - **[Docker](https://docs.docker.com/engine/install/)** (latest version recommended)
 - **[Docker Compose](https://docs.docker.com/compose/)** (V2.x or later)
 
-Start the application by running `docker compose` inside the `/interviews.2025.ascribe` project directory:
+Start the application by running `docker compose` inside the project directory root:
 
 ```sh
 docker compose up --build
